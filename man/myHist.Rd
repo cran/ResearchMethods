@@ -8,14 +8,14 @@
   myHist(xl, yb, xr, yt, hDat, breaks = NULL, sample = TRUE,CIs = FALSE, xlab = FALSE, label.bars = FALSE, right = TRUE)
 }
 \arguments{
-  \item{xl,yb,xr,yt}{}
-  \item{hDat}{}
-  \item{breaks}{}
-  \item{sample}{}
-  \item{CIs}{}
-  \item{xlab}{}
-  \item{label.bars}{}
-  \item{right}{}
+  \item{xl,yb,xr,yt}{The left, bottom, right and top parts of the plot respectively.}
+  \item{hDat}{The data to be plotted.}
+  \item{breaks}{Where the break points should be.}
+  \item{sample}{The subset of the dataset to be plotted.}
+  \item{CIs}{Should CIs be plotted around the bars.}
+  \item{xlab}{The x-axis label.}
+  \item{label.bars}{The bar labels.}
+  \item{right}{Should the plot be right-justified?}
 }
 \details{
 

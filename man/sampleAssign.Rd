@@ -16,7 +16,7 @@ sampleAssign(gui = T, n = 30, treat = 3, coinProb, type = 0, ...)
   \item{...}{Additional arguements...}
 }
 \details{
-  This function produces two windows.  The first window is the control window, from which the user can select one of the following three allocation methods: \textsl{Simple Randomization, Random Permuted Blocks, Biased Coin}.  For each of the methods, the number of patients being allocated, \code{n} can be set, and for the first two, the number of treatments can also be set.  Note that Biased Coin can only take two treatments.
+  This function produces two windows.  The first window is the control window, from which the user can select one of the following three allocation methods: Simple Randomization, Random Permuted Blocks, Biased Coin.  For each of the methods, the number of patients being allocated, \code{n} can be set, and for the first two, the number of treatments can also be set.  Note that Biased Coin can only take two treatments.
 
   The second window is the plotting window, which displays what treatment each patient is allocated to.  The first patient is in the top-right corner, and the patients read across as normal.  The color coding for the first two methods is self explanatory.  For the Biased Coin method, treatment A is colored as red and B as blue.  The light red and light blue indicate that the patient is allocated to the same treatment, but they are allocated there because of the biased coin, ie, the light red patients would be blue if a simple randomization scheme were used.
 }
