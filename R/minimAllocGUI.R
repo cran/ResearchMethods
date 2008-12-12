@@ -67,7 +67,7 @@ minimAllocGUI <- function(factors=NULL,file=NULL,prob=1){
             lev = MAenv$factors[i+1][[1]]
             for(j in 1:length(lev)){
                 patients = MAenv$patMat[MAenv$patMat[,i]==j,]
-                text(xL[2],yB[first],lev[j],pos=4,)
+                text(xL[2],yB[first],lev[j],pos=4,col=(j==MAenv$patMat[dim(MAenv$patMat)[1],i])+1)
                 if(is.matrix(patients)){
                     aCount = sum(patients[,numFact+1]=="A")
                     bCount = sum(patients[,numFact+1]=="B")
@@ -81,31 +81,14 @@ minimAllocGUI <- function(factors=NULL,file=NULL,prob=1){
                     bCount = 0
                 }
                      
-                text(xL[3],yB[first],aCount,pos=4,)
-                text(xL[4],yB[first],bCount,pos=4,)
+                text(xL[3],yB[first],aCount,pos=4,col=(MAenv$patMat[dim(MAenv$patMat)[1],"treatment"]=="A")*(j==MAenv$patMat[dim(MAenv$patMat)[1],i])+1)
+                text(xL[4],yB[first],bCount,pos=4,col=(MAenv$patMat[dim(MAenv$patMat)[1],"treatment"]=="B")*(j==MAenv$patMat[dim(MAenv$patMat)[1],i])+1)
                 first = first - 1
             }
             first = first - 1
         }
     }
     allocate <- function(...){
-        # a function to coordinate the check buttons
-        check <- function(...){
-            numFact = length(MAenv$factors[1][[1]])
-            for(i in 1:numFact){
-                numLev = length(MAenv$factors[i+1][[1]])
-                val = rep(0,numFact)
-                for(j in 1:numLev){
-                    val[j] <- as.numeric(tclvalue(get(paste("var",i,".",j,sep=''),env=MAenv)))
-                }
-                if(sum(val)>1){
-                    # need to reset the points
-                    for(j in 1:numLev){
-                        tkdeselect(get(paste("check",i,".",j,sep=''),env=MAenv))
-                    }
-                }
-            }
-        }
         add <- function(...){
             if(!exists("patMat",env=MAenv)){
                 patMat = matrix(rep(0,length(MAenv$factors[1][[1]])+1),nrow=1)
@@ -113,7 +96,6 @@ minimAllocGUI <- function(factors=NULL,file=NULL,prob=1){
                 assign("patMat",patMat,env=MAenv)
             }
             # getting the appropriate input from the buttons
-            ### THIS HAS CHANGED WITH THE RADIO BUTTONS
             tempRow = rep(0,length(MAenv$factors[1][[1]]))
             for(i in 1:(length(MAenv$factors[1][[1]]))){
                 tempRow[i] = as.numeric(tclvalue(get(paste("var",i,sep=""),env=MAenv)))
@@ -154,11 +136,6 @@ minimAllocGUI <- function(factors=NULL,file=NULL,prob=1){
             tkgrid(tklabel(tempFrame,text=MAenv$factors[1][[1]][i]),rowspan=numLev+1,sticky='e')
             assign(paste("var",i,sep=""),tclVar(0),env=MAenv)           
             for(j in 1:numLev){
-                # using radio buttons instead of check buttons
-                # assign(paste("var",i,".",j,sep=""),tclVar(0),env=MAenv)
-                # tempCheck <- tkcheckbutton(tempFrame,text=MAenv$factors[i+1][[1]][j],variable=get(paste("var",i,".",j,sep=""),env=MAenv),command=check)
-                # tkpack(tempFrame,tempCheck,side="top")
-                # assign(paste("check",i,".",j,sep=""),tempCheck,env=MAenv)
                 tempRadio <- tkradiobutton(tempFrame,text=MAenv$factors[i+1][[1]][j],variable=get(paste("var",i,sep=""),env=MAenv),value=j)
                 tkgrid(tempRadio,row=j,column=2,sticky='w')
                 assign(paste("radio",i,".",j,sep=""),tempRadio,env=MAenv)

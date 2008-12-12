@@ -5,7 +5,7 @@
   Using a graphical user interface (GUI) this function performs a Bland Altman plot, and allows for manipulation of the variables within the plot.
 }
 \usage{
-BlandAltman(x, y, gui=TRUE, bandsOn=FALSE, biasOn=FALSE, regionOn=FALSE, sig=2)
+BlandAltman(x, y, gui=TRUE, bandsOn=FALSE, biasOn=FALSE, regionOn=FALSE, smooth=FALSE, sig=2)
 }
 \arguments{
   \item{x}{ The observations from the old measurement technique. }
@@ -14,6 +14,7 @@ BlandAltman(x, y, gui=TRUE, bandsOn=FALSE, biasOn=FALSE, regionOn=FALSE, sig=2)
   \item{bandsOn}{ An indicator of whether the confidence bands should be plotted. }
   \item{biasOn}{ An indicator of whether the bias region should be plotted. }
   \item{regionOn}{ An indicator of whether the region of agreement should be plotted. }
+  \item{smooth}{ An indicator of whether lines of best fit (linear and non-linear) should be included in the plot. }
   \item{sig}{Initial value of the scalar on sigma}
 }
 \details{
@@ -21,7 +22,7 @@ BlandAltman(x, y, gui=TRUE, bandsOn=FALSE, biasOn=FALSE, regionOn=FALSE, sig=2)
 
   This function produces one or two windows.  The Tk window, or the control window, is only produced when \code{gui=T}, and provides controls to manipulate the plot in real time.  The control window contains three check buttons and a slider bar, which provide the manipulation of the Bland Altman plot.  The top button adds the confidence bounds, the second adds the bias line, and the third adds the region of agreement.  Note that the bias line and region of agreement will not work unless the confidence bounds are on.  The slider bar allows for manipulation of the confidence bounds: the standard confidence region is 2 x sigma, but this is strictly a statistical standard, and there may be a desire to widen of shrink the confidence region given the specific data.  The slider bar has a range of [0.1, 5] within which the multiplier on sigma may be set.
 
-  The second window is the plotting window, featuring a scatter plot of the Bland Altman data.  See the referenced Bland Altman paper for a more detailed explanation of the Bland Altman process: a brief explanation is that the points are plotted with the difference between two observations on the y-axis, and the mean of the two observations on the x-axis.  The confidence bounds, when added, are plotted as dotted red lines, and all points within the confidence bounds are coloured green, all points outside the confidence bounds in red.  The bias region, plotted as an oranged field, is the range between the difference = 0 line and the average difference, and the region of agreement is merely a green shading of the area within the confidence bounds.
+  The second window is the plotting window, featuring a scatter plot of the Bland Altman data.  See the referenced Bland Altman paper for a more detailed explanation of the Bland Altman process: a brief explanation is that the points are plotted with the difference between two observations on the y-axis, and the mean of the two observations on the x-axis.  The confidence bounds, when added, are plotted as dotted red lines, and all points within the confidence bounds are coloured green, all points outside the confidence bounds in red.  The bias region, plotted as an oranged field, is the range between the difference = 0 line and the average difference, and the region of agreement is merely a green shading of the area within the confidence bounds.  The lines of best fit are regression and lowess fits for the linear and non-linear lines respectively. 
 }
 \value{
   No meaningful value is returned, this function is run only for its plotting functions.  The variable \code{BAenv} is left behind so the variables used in the plotting function may be manipulated.

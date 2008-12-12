@@ -1,5 +1,4 @@
 \name{menuSampleSize}
-\alias{sampleSize}
 \alias{menuSampleSize}
 \title{Sample Size Caclulations}
 \description{
