@@ -22,38 +22,38 @@ bootSingle <- function(){
     points(x,yBot,pch=LETTERS)
     symbols(x,yTop,circles=rep(0.35,26),add=TRUE,bg=color[ind],inches=FALSE)
     points(x,yTop,pch=LETTERS[ind])
-    BSenv$plotted = 27
+    BSenvir$plotted = 27
   }
   # refresh2 info: need to track new samples and number of points plotted
-  BSenv <- new.env()
-  BSenv$indSample = sample(1:26,26,replace=TRUE)
-  BSenv$plotted = 0
+  BSenvir <- new.env()
+  BSenvir$indSample = sample(1:26,26,replace=TRUE)
+  BSenvir$plotted = 0
   refresh2 <-  function(...){
-    if(BSenv$plotted==25){
+    if(BSenvir$plotted==25){
       tkconfigure(indivButton,text='Sort the Sample')
     }
-    if(BSenv$plotted==26){
-      symbols(x,yTop,circles=rep(0.35,26),add=TRUE,bg=color[sort(BSenv$indSample)],inches=FALSE)
-      points(x,yTop,pch=LETTERS[sort(BSenv$indSample)])
-      botCol = 2*(1:26%in%BSenv$indSample) -1*!(1:26%in%BSenv$indSample)
+    if(BSenvir$plotted==26){
+      symbols(x,yTop,circles=rep(0.35,26),add=TRUE,bg=color[sort(BSenvir$indSample)],inches=FALSE)
+      points(x,yTop,pch=LETTERS[sort(BSenvir$indSample)])
+      botCol = 2*(1:26%in%BSenvir$indSample) -1*!(1:26%in%BSenvir$indSample)
       botCol[botCol==-1] = 'grey75'
       symbols(x,yBot,circles=rep(0.35,26),add=TRUE,bg=botCol,inches=FALSE)
       points(x,yBot,pch=LETTERS)
-      BSenv$plotted = BSenv$plotted+1
+      BSenvir$plotted = BSenvir$plotted+1
       tkconfigure(indivButton,text='SAMPLE Step-by-Step')
       
     }
     else{
-      if(BSenv$plotted==27){
-        BSenv$plotted=0
-        BSenv$indSample = sample(1:26,26,replace=TRUE)
+      if(BSenvir$plotted==27){
+        BSenvir$plotted=0
+        BSenvir$indSample = sample(1:26,26,replace=TRUE)
         rect(0,6.5,10,11,density=-1,col='white',border=NA)
       }
-      BSenv$plotted = BSenv$plotted+1
-      symbols(x[BSenv$plotted],yTop[BSenv$plotted],circles=0.35,add=TRUE,bg=color[BSenv$indSample[BSenv$plotted]],inches=FALSE)
-      points(x[BSenv$plotted],yTop[BSenv$plotted],pch=LETTERS[BSenv$indSample[BSenv$plotted]])
+      BSenvir$plotted = BSenvir$plotted+1
+      symbols(x[BSenvir$plotted],yTop[BSenvir$plotted],circles=0.35,add=TRUE,bg=color[BSenvir$indSample[BSenvir$plotted]],inches=FALSE)
+      points(x[BSenvir$plotted],yTop[BSenvir$plotted],pch=LETTERS[BSenvir$indSample[BSenvir$plotted]])
       col = rep('grey75',26)
-      col[BSenv$indSample[BSenv$plotted]] = 'red'
+      col[BSenvir$indSample[BSenvir$plotted]] = 'red'
       symbols(x,yBot,circles=rep(0.35,26),add=TRUE,bg=col,inches=FALSE)
       points(x,yBot,pch=LETTERS)
     }

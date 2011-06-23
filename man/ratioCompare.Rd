@@ -5,9 +5,11 @@
   Using a Graphical User Interface (GUI), this function demonstrates how an odds ratio can be an accurate approximation of relative risk when the probability is low.
 }
 \usage{
-ratioCompare()
+ratioCompare(gui=TRUE, pointLabel=TRUE)
 }
 \arguments{
+  \item{gui}{Whether to active the interface}
+  \item{pointLabel}{Label the specific point}
 }
 \details{
   This function is rather straight forward, as it takes no arguements, and the corresponding control window only has two bars on it.  The idea is to demonstrate how, as both p1 and p2 approach 0, the odds ratio becomes a better approximation of the relative risk.
@@ -17,6 +19,5 @@ ratioCompare()
 \value{
   No value is returned, though the environment, RCenv, is left for the user to examine.
 }
-\references{  }
 \author{ Mohamed Abdolell <mohamed.abdolell@dal.ca> and Sam Stewart <samstewart11@gmail.com> }
 \keyword{design}

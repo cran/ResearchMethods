@@ -5,7 +5,7 @@
   Using a graphical user interface (GUI) this function performs a Bland Altman plot, and allows for manipulation of the variables within the plot.
 }
 \usage{
-BlandAltman(x, y, gui=TRUE, bandsOn=FALSE, biasOn=FALSE, regionOn=FALSE, smooth=FALSE, sig=2)
+BlandAltman(x, y, gui=TRUE, bandsOn=TRUE, biasOn=FALSE, regionOn=FALSE, smooth=FALSE, sig=2, main=NULL)
 }
 \arguments{
   \item{x}{ The observations from the old measurement technique. }
@@ -16,6 +16,7 @@ BlandAltman(x, y, gui=TRUE, bandsOn=FALSE, biasOn=FALSE, regionOn=FALSE, smooth=
   \item{regionOn}{ An indicator of whether the region of agreement should be plotted. }
   \item{smooth}{ An indicator of whether lines of best fit (linear and non-linear) should be included in the plot. }
   \item{sig}{Initial value of the scalar on sigma}
+  \item{main}{The title for the plot}
 }
 \details{
   The Bland-Altman plot is a visual tool for comparing two different methods of measuring the same value, when the true value being measured is not known.  The purpose of a Bland Altman plot is to try and determine whether a new method of measurement is better than an established one, using a hypothesis testing approach.  See the referenced papers for more information.

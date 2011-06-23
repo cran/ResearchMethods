@@ -2,24 +2,24 @@ sampleSchemes <- function(gui=TRUE,sampleType=0,sampleSize=30,clusterSize=5,...)
     x = cumsum(c(0,6,12,7,8,7))*0.025
     yl = cumsum(c(0,3,4,3,4,3,4,4))*0.04
     yr = cumsum(c(0,2,5,2,5,2,5,4))*0.04
-    SCenv<<-new.env()
-    assign("u1",rep(0,36),env=SCenv)
-    assign("u2",rep(0,36),env=SCenv)
-    assign("u3",rep(0,36),env=SCenv)
-    assign("g1",rep(0,40),env=SCenv)
-    assign("g2",rep(0,40),env=SCenv)
-    assign("g3",rep(0,40),env=SCenv)
-    assign("sampleType",sampleType,env=SCenv)
-    assign("sampleName","Simple Random Sampling",env=SCenv)
-    assign("clusterSize",clusterSize,env=SCenv)
-    assign("size",tclVar(sampleSize),env=SCenv)
+    SCenvir<<-new.env()
+    assign("u1",rep(0,36),envir=SCenvir)
+    assign("u2",rep(0,36),envir=SCenvir)
+    assign("u3",rep(0,36),envir=SCenvir)
+    assign("g1",rep(0,40),envir=SCenvir)
+    assign("g2",rep(0,40),envir=SCenvir)
+    assign("g3",rep(0,40),envir=SCenvir)
+    assign("sampleType",sampleType,envir=SCenvir)
+    assign("sampleName","Simple Random Sampling",envir=SCenvir)
+    assign("clusterSize",clusterSize,envir=SCenvir)
+    assign("size",tclVar(sampleSize),envir=SCenvir)
 
     getSample <- function(...){
         if(gui){
             type = as.numeric(tclvalue(tkcurselection(sampleList)))
-            if(!is.na(type)) assign("sampleType",type,env=SCenv)
-            else type = SCenv$sampleType
-            n = as.numeric(tclvalue(SCenv$size))
+            if(!is.na(type)) assign("sampleType",type,envir=SCenvir)
+            else type = SCenvir$sampleType
+            n = as.numeric(tclvalue(SCenvir$size))
         }
         else{
             type = sampleType
@@ -27,20 +27,20 @@ sampleSchemes <- function(gui=TRUE,sampleType=0,sampleSize=30,clusterSize=5,...)
         }
         # Simple Random Sample
         if(type==0){
-            assign("sampleName","Simple Random Sampling",env=SCenv)
+            assign("sampleName","Simple Random Sampling",envir=SCenvir)
             units = sample(1:228,n,replace=FALSE)
             colors = rep(0,228)
             colors[units]=2
-            assign("u1",colors[0:36],env=SCenv)
-            assign("u2",colors[37:72],env=SCenv)
-            assign("u3",colors[73:108],env=SCenv)
-            assign("g1",colors[109:148],env=SCenv)
-            assign("g2",colors[149:188],env=SCenv)
-            assign("g3",colors[189:228],env=SCenv)
+            assign("u1",colors[0:36],envir=SCenvir)
+            assign("u2",colors[37:72],envir=SCenvir)
+            assign("u3",colors[73:108],envir=SCenvir)
+            assign("g1",colors[109:148],envir=SCenvir)
+            assign("g2",colors[149:188],envir=SCenvir)
+            assign("g3",colors[189:228],envir=SCenvir)
         }
         # Stratify by dorm
         if(type==1){
-            assign("sampleName","Stratified Random Sampling (by dorm)",env=SCenv)
+            assign("sampleName","Stratified Random Sampling (by dorm)",envir=SCenvir)
             nS = floor(n/6)
             extra = n-nS*6
             extraUnit = sample(1:6,extra,replace=FALSE)
@@ -49,31 +49,31 @@ sampleSchemes <- function(gui=TRUE,sampleType=0,sampleSize=30,clusterSize=5,...)
             colors = rep(0,36)
             units=sample(1:36,nSize[1],replace=FALSE)
             colors[units]=colors[units]+2
-            assign("u1",colors,env=SCenv)
+            assign("u1",colors,envir=SCenvir)
             colors = rep(0,36)
             units=sample(1:36,nSize[2],replace=FALSE)
             colors[units]=colors[units]+2
-            assign("u2",colors,env=SCenv)
+            assign("u2",colors,envir=SCenvir)
             colors = rep(0,36)
             units=sample(1:36,nSize[3],replace=FALSE)
             colors[units]=colors[units]+2
-            assign("u3",colors,env=SCenv)
+            assign("u3",colors,envir=SCenvir)
             colors = rep(0,40)
             units=sample(1:40,nSize[4],replace=FALSE)
             colors[units]=colors[units]+2
-            assign("g1",colors,env=SCenv)
+            assign("g1",colors,envir=SCenvir)
             colors = rep(0,40)
             units=sample(1:40,nSize[5],replace=FALSE)
             colors[units]=colors[units]+2
-            assign("g2",colors,env=SCenv)
+            assign("g2",colors,envir=SCenvir)
             colors = rep(0,40)
             units=sample(1:40,nSize[6],replace=FALSE)
             colors[units]=colors[units]+2
-            assign("g3",colors,env=SCenv)
+            assign("g3",colors,envir=SCenvir)
         }
         # Stratify by student type
         if(type==2){
-            assign("sampleName","Stratified Random Sampling (by student type)",env=SCenv)
+            assign("sampleName","Stratified Random Sampling (by student type)",envir=SCenvir)
             nS = floor(n/2)
             nSize = rep(nS,2)
             if(odd(n)){
@@ -83,24 +83,24 @@ sampleSchemes <- function(gui=TRUE,sampleType=0,sampleSize=30,clusterSize=5,...)
             units = c(sample(1:108,nSize[1],replace=FALSE),sample(109:228,nSize[2],replace=FALSE))
             colors = rep(0,228)
             colors[units] = colors[units]+2
-            assign("u1",colors[0:36],env=SCenv)
-            assign("u2",colors[37:72],env=SCenv)
-            assign("u3",colors[73:108],env=SCenv)
-            assign("g1",colors[109:148],env=SCenv)
-            assign("g2",colors[149:188],env=SCenv)
-            assign("g3",colors[189:228],env=SCenv)
+            assign("u1",colors[0:36],envir=SCenvir)
+            assign("u2",colors[37:72],envir=SCenvir)
+            assign("u3",colors[73:108],envir=SCenvir)
+            assign("g1",colors[109:148],envir=SCenvir)
+            assign("g2",colors[149:188],envir=SCenvir)
+            assign("g3",colors[189:228],envir=SCenvir)
         }
         # cluster sample
         if(type==3){
-            assign("sampleName","Cluster Sample (by floor)",env=SCenv)
+            assign("sampleName","Cluster Sample (by floor)",envir=SCenvir)
             if(gui){
                 d = as.numeric(tclvalue(tkget(clusterEntry)))
             }
             else{
                 d = NA
             }
-            if(!is.na(d)) assign("clustSize",d,env=SCenv)
-            else d = SCenv$clusterSize
+            if(!is.na(d)) assign("clustSize",d,envir=SCenvir)
+            else d = SCenvir$clusterSize
             floors = sample(1:24,d,replace=FALSE)
             floorSample = rep(0,24)
             floorSample[floors] = floorSample[floors]+2
@@ -109,43 +109,43 @@ sampleSchemes <- function(gui=TRUE,sampleType=0,sampleSize=30,clusterSize=5,...)
                 colors = c(colors,rep(floorSample[i],12))
             for(i in 10:24)
                 colors = c(colors,rep(floorSample[i],8))
-            assign("u1",colors[0:36],env=SCenv)
-            assign("u2",colors[37:72],env=SCenv)
-            assign("u3",colors[73:108],env=SCenv)
-            assign("g1",colors[109:148],env=SCenv)
-            assign("g2",colors[149:188],env=SCenv)
-            assign("g3",colors[189:228],env=SCenv)
+            assign("u1",colors[0:36],envir=SCenvir)
+            assign("u2",colors[37:72],envir=SCenvir)
+            assign("u3",colors[73:108],envir=SCenvir)
+            assign("g1",colors[109:148],envir=SCenvir)
+            assign("g2",colors[149:188],envir=SCenvir)
+            assign("g3",colors[189:228],envir=SCenvir)
         }
         # Synthetic Sample
         if(type==4){
-            assign("sampleName","Synthetic Sample of every ith room",env=SCenv)
+            assign("sampleName","Synthetic Sample of every ith room",envir=SCenvir)
             if(gui){d = as.numeric(tclvalue(tkget(clusterEntry)))}
             else{d=NA}
-            if(!is.na(d)) assign("clustSize",d,env=SCenv)
-            else d = SCenv$clusterSize
+            if(!is.na(d)) assign("clustSize",d,envir=SCenvir)
+            else d = SCenvir$clusterSize
             start = sample(1:d,1)
             colors = 1:228
             units = even((colors-start)/d)+even((colors-start)/d+1)
             colors = rep(0,228)
             colors[units==1] = colors[units==1]+2
-            assign("u1",colors[0:36],env=SCenv)
-            assign("u2",colors[37:72],env=SCenv)
-            assign("u3",colors[73:108],env=SCenv)
-            assign("g1",colors[109:148],env=SCenv)
-            assign("g2",colors[149:188],env=SCenv)
-            assign("g3",colors[189:228],env=SCenv)
+            assign("u1",colors[0:36],envir=SCenvir)
+            assign("u2",colors[37:72],envir=SCenvir)
+            assign("u3",colors[73:108],envir=SCenvir)
+            assign("g1",colors[109:148],envir=SCenvir)
+            assign("g2",colors[149:188],envir=SCenvir)
+            assign("g3",colors[189:228],envir=SCenvir)
 
         }
     }
     
     refresh <- function(...){
         getSample()
-        uCol1=SCenv$u1
-        uCol2=SCenv$u2
-        uCol3=SCenv$u3
-        gCol1=SCenv$g1
-        gCol2=SCenv$g2
-        gCol3=SCenv$g3
+        uCol1=SCenvir$u1
+        uCol2=SCenvir$u2
+        uCol3=SCenvir$u3
+        gCol1=SCenvir$g1
+        gCol2=SCenvir$g2
+        gCol3=SCenvir$g3
 
         # the counts per floor, dorm, student
         # student
@@ -161,7 +161,7 @@ sampleSchemes <- function(gui=TRUE,sampleType=0,sampleSize=30,clusterSize=5,...)
         #uDorm1
         par(fig=c(0,1,0,1),mar=c(0,0,3,0))
         plot.new() 
-        title(main=SCenv$sampleName)
+        title(main=SCenvir$sampleName)
         xTemp = seq(x[2],x[3],length.out=13)
         xLeft = xTemp[1:12]
         xRight = xTemp[2:13]
@@ -282,7 +282,7 @@ sampleSchemes <- function(gui=TRUE,sampleType=0,sampleSize=30,clusterSize=5,...)
     listFrame <- tkframe(m)
     sampleList <- tklistbox(listFrame,width=-1,height=-1)
     plotButton <- tkbutton(m,command=refresh,text="Sample")
-    nSlider <- tkscale(m,from=1,to=228,orient='horiz',label='n',variable=SCenv$size)
+    nSlider <- tkscale(m,from=1,to=228,orient='horiz',label='n',variable=SCenvir$size)
     clusterFrame <- tkframe(m)
     clusterEntry <- tkentry(clusterFrame,width=7,bg='white')
 

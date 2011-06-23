@@ -1,9 +1,9 @@
 sampleAssign <- function(gui=T,n=30,treat=3,coinProb=0.6,type=0,...){
-    SAenv <<- new.env()
-    assign("n",tclVar(n),env=SAenv)
-    assign("numTreat",tclVar(treat),env=SAenv)
-    assign("allocType",type,env=SAenv)
-    assign("title","",env=SAenv)
+    SAenvir <<- new.env()
+    assign("n",tclVar(n),envir=SAenvir)
+    assign("numTreat",tclVar(treat),envir=SAenvir)
+    assign("allocType",type,envir=SAenvir)
+    assign("title","",envir=SAenvir)
 
     getP <- function(...){
         if(gui) p <- as.numeric(tclvalue(tkget(pEntry)))
@@ -21,20 +21,20 @@ sampleAssign <- function(gui=T,n=30,treat=3,coinProb=0.6,type=0,...){
     refresh <- function(...){
         if(gui) index = as.numeric(tclvalue(tkcurselection(schemeList)))
         else index = NA
-        if(is.na(index)) index = SAenv$allocType
-        else assign("allocType",index,env=SAenv)
+        if(is.na(index)) index = SAenvir$allocType
+        else assign("allocType",index,envir=SAenvir)
         if(gui) n = as.numeric(tclvalue(tkget(nEntry)))
         else n = NA
         if(is.na(n) || n < 0){
-          n = as.numeric(tclvalue(SAenv$n))
+          n = as.numeric(tclvalue(SAenvir$n))
           if(gui){
             tkinsert(nEntry,0,n)
           }
         }
-        else assign("n",tclVar(n),env=SAenv)
+        else assign("n",tclVar(n),envir=SAenvir)
         if(gui) num = as.numeric(tclvalue(tkget(treatEntry)))
         else num = treat
-        if(!is.na(num) && num > 0) assign("numTreat",tclVar(num),env=SAenv)
+        if(!is.na(num) && num > 0) assign("numTreat",tclVar(num),envir=SAenvir)
         #simple randomization
         if(index == 0){
             treat = LETTERS[1:num]
@@ -51,7 +51,7 @@ sampleAssign <- function(gui=T,n=30,treat=3,coinProb=0.6,type=0,...){
                     colorList[numList==bound[i][[1]][j]]=rainbow(length(treat))[i]
                 }
             }
-            assign("title","Simple Randomization",env=SAenv)
+            assign("title","Simple Randomization",envir=SAenvir)
         }
         # Random Permuted Blocks
         if(index==1){
@@ -65,12 +65,12 @@ sampleAssign <- function(gui=T,n=30,treat=3,coinProb=0.6,type=0,...){
                 colorList[assignList==treat[i]]=rainbow(length(treat))[i]
                 treatCount[i] = sum(assignList==treat[i])
             }
-            assign("title","Random Permuted Blocks",env=SAenv)
+            assign("title","Random Permuted Blocks",envir=SAenvir)
         }
         # Biased Coin
         if(index==2){
           if(gui){
-            assign("numTreat",tclVar(2),env=SAenv)
+            assign("numTreat",tclVar(2),envir=SAenvir)
             tkdelete(treatEntry,0,"end")
             tkinsert(treatEntry,0,2)
           }
@@ -121,7 +121,7 @@ sampleAssign <- function(gui=T,n=30,treat=3,coinProb=0.6,type=0,...){
                     }
                 }
             }
-            assign("title","Biased Coin",env=SAenv)
+            assign("title","Biased Coin",envir=SAenvir)
         }
         #finding plot limits
         temp = round(n/(1:n)) - n/(1:n)
@@ -164,12 +164,12 @@ sampleAssign <- function(gui=T,n=30,treat=3,coinProb=0.6,type=0,...){
                 }
             }
         }
-        title(main=SAenv$title)
+        title(main=SAenvir$title)
         par(new=TRUE)
         par(fig=c(0,1,0,0.3))
         output = paste(treat,":",treatCount)
         textplot(output,halign="center",valign="top")
-        assign("letters",assignList,env=SAenv)
+        assign("letters",assignList,envir=SAenvir)
     }
     if(gui){
       m <- tktoplevel()

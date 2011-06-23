@@ -1,35 +1,35 @@
 caseRatio <- function(GUI=TRUE,alpha=0.05,beta=0.1){
-    CRenv <<- new.env()
-    assign("r",tclVar(0.5),env=CRenv)
-    assign("alpha",tclVar(alpha),env=CRenv)
-    assign("beta",tclVar(beta),env=CRenv)
+    CRenvir <<- new.env()
+    assign("r",tclVar(0.5),envir=CRenvir)
+    assign("alpha",tclVar(alpha),envir=CRenvir)
+    assign("beta",tclVar(beta),envir=CRenvir)
     power <- function(r,a,b){
         pnorm(2*(qnorm(1-a)+qnorm(1-b))*sqrt(r*(1-r))-qnorm(1-a))
     }
     getA <- function(...){
-        if(GUI) a <- as.numeric(tclvalue(tkget(CRenv$aEntry)))
+        if(GUI) a <- as.numeric(tclvalue(tkget(CRenvir$aEntry)))
         else a <- alpha
         if(!is.na(a) && a < 1 && a > 0) return(a)
         else{
-            tkdelete(CRenv$aEntry,0,"end")
-            tkinsert(CRenv$aEntry,0,"0.05")
+            tkdelete(CRenvir$aEntry,0,"end")
+            tkinsert(CRenvir$aEntry,0,"0.05")
             return(0.05)
         }
     }
     getB <- function(...){
-        if(GUI) b <- as.numeric(tclvalue(tkget(CRenv$bEntry)))
+        if(GUI) b <- as.numeric(tclvalue(tkget(CRenvir$bEntry)))
         else b <- beta
         if(!is.na(b) && b < 1 && b > 0) return(b)
         else{
-            tkdelete(CRenv$bEntry,0,"end")
-            tkinsert(CRenv$bEntry,0,"0.10")
+            tkdelete(CRenvir$bEntry,0,"end")
+            tkinsert(CRenvir$bEntry,0,"0.10")
             return(0.10)
         }
     }
     refresh <- function(...){
         a <- getA()
         b <- getB()
-        r <- as.numeric(tclvalue(CRenv$r))
+        r <- as.numeric(tclvalue(CRenvir$r))
         x <- seq(0.5,1,0.01)
         y <- power(x,a,b)
         z <- power(r,a,b)
@@ -42,7 +42,7 @@ caseRatio <- function(GUI=TRUE,alpha=0.05,beta=0.1){
         tkwm.title(m,"Case:Control Ratio")
         frame1 <- tkframe(m)
         frame2 <- tkframe(m)
-        rSlider <- tkscale(frame2,command=refresh,from=0.5,to=1,resolution=0.01,orient='horiz',variable=CRenv$r)
+        rSlider <- tkscale(frame2,command=refresh,from=0.5,to=1,resolution=0.01,orient='horiz',variable=CRenvir$r)
         aEntry <- tkentry(frame1,width=5,bg='white')
         bEntry <- tkentry(frame1,width=5,bg='white')
         f1 <- tkfont.create(m,family='symbol')
@@ -58,8 +58,8 @@ caseRatio <- function(GUI=TRUE,alpha=0.05,beta=0.1){
         tkpack(tklabel(frame2,text="Proportion New:"),side='left')
         tkpack(frame2,rSlider,side='bottom')
 
-        assign("aEntry",aEntry,env=CRenv)
-        assign("bEntry",bEntry,env=CRenv)
+        assign("aEntry",aEntry,envir=CRenvir)
+        assign("bEntry",bEntry,envir=CRenvir)
     }
     else refresh()
 }

@@ -1,45 +1,45 @@
 sumSquares <- function(x,y){
-    SSenv <<- new.env()
-    assign("X",x,env=SSenv)
-    assign("Y",y,env=SSenv)
-    X <- SSenv$X
-    Y <- SSenv$Y
+    SSenvir <<- new.env()
+    assign("X",x,envir=SSenvir)
+    assign("Y",y,envir=SSenvir)
+    X <- SSenvir$X
+    Y <- SSenvir$Y
     model <- lm(Y~X)
-    SSenv$intercept <- model$coeff[1]
+    SSenvir$intercept <- model$coeff[1]
     oldIntercept <- Inf
-    SSenv$slope <- model$coeff[2]
+    SSenvir$slope <- model$coeff[2]
     oldSlope <- Inf
     colors <- rainbow(length(X))
     lim <- .05*diff(range(y))
     refresh <- function(l){
-#      cat(":",SSenv$intercept,SSenv$slope,":")
+#      cat(":",SSenvir$intercept,SSenvir$slope,":")
 #      cat(":",l$x,l$y,":")
-      if(!is.na(l$x) && !is.na(l$y) && abs(SSenv$intercept+SSenv$slope*l$x-l$y)<lim){
+      if(!is.na(l$x) && !is.na(l$y) && abs(SSenvir$intercept+SSenvir$slope*l$x-l$y)<lim){
         if(l$x < min(X)){
-          abline(SSenv$intercept,SSenv$slope,col='blue')
+          abline(SSenvir$intercept,SSenvir$slope,col='blue')
           l3 <- locator(1,type='n')
 #          cat(":l3",l3$x,l3$y)
-          SSenv$intercept <- l3$y - SSenv$slope*l3$x
+          SSenvir$intercept <- l3$y - SSenvir$slope*l3$x
         }
         else{
-          abline(SSenv$intercept,SSenv$slope,col='red')
+          abline(SSenvir$intercept,SSenvir$slope,col='red')
           l2 <- locator(1,type='n')
 #          cat(":l2",l2$x,l2$y)
-          SSenv$slope <- (l2$y-SSenv$intercept)/l2$x
+          SSenvir$slope <- (l2$y-SSenvir$intercept)/l2$x
         }
       }
       else if(!is.na(l$x) && !is.na(l$y) && abs(l$x-mean(c(0,max(X))))/max(X) < .1 && l$y > max(Y)){
-        SSenv$intercept <- model$coeff[1]
+        SSenvir$intercept <- model$coeff[1]
         oldIntercept <- Inf
-        SSenv$slope <- model$coeff[2]
+        SSenvir$slope <- model$coeff[2]
         oldSlope <- Inf
       }
-      if(SSenv$slope!=oldSlope || SSenv$intercept != oldIntercept){
+      if(SSenvir$slope!=oldSlope || SSenvir$intercept != oldIntercept){
         # Residual Plots
         par(fig=c(0.5,1,0.3,1),mar=c(5,3,4,1))
         plot(X,Y,main="Residual Squares",cex.main=1,pch=20,col=colors,xlim=c(0,max(X)),ylim=c(0,max(Y)))
-        abline(SSenv$intercept,SSenv$slope,lwd=2)
-        fit <- SSenv$intercept+SSenv$slope*X
+        abline(SSenvir$intercept,SSenvir$slope,lwd=2)
+        fit <- SSenvir$intercept+SSenvir$slope*X
         resid <- Y - fit
         index <- sort(resid^2,decreasing=T,index.return=T)$ix
         for(i in index){
@@ -57,7 +57,7 @@ sumSquares <- function(x,y){
         par(fig=c(0,0.5,0.3,1),mar=c(5,3,4,1))
         plot(X,Y,col=colors,xlim=c(0,max(x)),ylim=c(0,max(y)),pch=16,main="Regression Plot",cex.main=1)
         mtext("RESET",side=3,font=2,cex=1.5)
-        abline(SSenv$intercept,SSenv$slope,lwd=2,font=2)
+        abline(SSenvir$intercept,SSenvir$slope,lwd=2,font=2)
       }
     }
     refresh(list(x=NA,y=NA))

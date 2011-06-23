@@ -1,21 +1,21 @@
 histSample <- function(dist=NA,gui=TRUE,yMax=FALSE,n=10000,sub=NaN,par=c(0,1)){
   if(is.na(dist)) type = 'norm'
   else type = dist
-  HSenv <<- new.env()
+  HSenvir <<- new.env()
   if(is.nan(sub)){
     subset = .1*n
   }
   else{
     subset = sub
   }
-  assign("subset",tclVar(subset),env=HSenv)
+  assign("subset",tclVar(subset),envir=HSenvir)
   choose <- function(...){
     if(gui){
-      index = as.numeric(tclvalue(tkcurselection(HSenv$options)))
+      index = as.numeric(tclvalue(tkcurselection(HSenvir$options)))
       x1 = tclvalue(tkget(parEntry1))
       x2 = tclvalue(tkget(parEntry2))
       if(!is.na(index)){
-          type <- HSenv$names[index+1]
+          type <- HSenvir$names[index+1]
       }
       if(!is.na(x1)){
           if(is.na(x2) || type=='exp' || type=='pois') par <- eval(parse(text=x1))
@@ -77,24 +77,24 @@ histSample <- function(dist=NA,gui=TRUE,yMax=FALSE,n=10000,sub=NaN,par=c(0,1)){
     if(yMax) yLim = c(0,max(linePoints)*1.5)
     else yLim = c(0,1)
     splits = quantile(lineData,prob=seq(0,1,0.04),names=FALSE)
-    assign("runDown",0,env=HSenv)
-    assign("dat",dat,env=HSenv)
-    assign("lineData",lineData,env=HSenv)
-    assign("linePoints",linePoints,env=HSenv)
-    assign("yLim",yLim,env=HSenv)
-    assign("splits",splits,env=HSenv)
-    assign("title",title,env=HSenv)
+    assign("runDown",0,envir=HSenvir)
+    assign("dat",dat,envir=HSenvir)
+    assign("lineData",lineData,envir=HSenvir)
+    assign("linePoints",linePoints,envir=HSenvir)
+    assign("yLim",yLim,envir=HSenvir)
+    assign("splits",splits,envir=HSenvir)
+    assign("title",title,envir=HSenvir)
     if(gui){
-      evalq(tkconfigure(sampleSize,variable=subset),env=HSenv)
+      evalq(tkconfigure(sampleSize,variable=subset),envir=HSenvir)
     }
     refresh()
   }
 
   refresh <- function(...){
-    data = HSenv$dat[1:as.numeric(tclvalue(HSenv$subset))]
-    plotData = hist(data,breaks=HSenv$splits,freq=FALSE,ylim=HSenv$yLim,plot=TRUE,main="",col='red')
-    title(main = HSenv$title)
-    points(HSenv$lineData,HSenv$linePoints,type='l',lwd=3,col='blue') 
+    data = HSenvir$dat[1:as.numeric(tclvalue(HSenvir$subset))]
+    plotData = hist(data,breaks=HSenvir$splits,freq=FALSE,ylim=HSenvir$yLim,plot=TRUE,main="",col='red')
+    title(main = HSenvir$title)
+    points(HSenvir$lineData,HSenvir$linePoints,type='l',lwd=3,col='blue') 
   }
   if(gui){
     m <- tktoplevel()
@@ -115,10 +115,10 @@ histSample <- function(dist=NA,gui=TRUE,yMax=FALSE,n=10000,sub=NaN,par=c(0,1)){
     tkgrid(changeButton,sticky='w',columnspan=2)
     tkgrid(parEntry1,tklabel(eFrame,text='(mu, lambda, df, shape)'),sticky='w')
     tkgrid(parEntry2,tklabel(eFrame,text='(sig, ncp, scale)'), sticky='w')
-    assign("options",options,env=HSenv)
-    assign("names",names,env=HSenv)
+    assign("options",options,envir=HSenvir)
+    assign("names",names,envir=HSenvir)
     choose()
-    assign("sampleSize",sampleSize,env=HSenv)
+    assign("sampleSize",sampleSize,envir=HSenvir)
 
   }
   else{choose()}

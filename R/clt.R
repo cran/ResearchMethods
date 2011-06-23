@@ -1,7 +1,7 @@
 cltDemo <- function(){
-  CDenv <- new.env()
+  CDenvir <- new.env()
   runVar <- tclVar(1)
-  CDenv$n = 1
+  CDenvir$n = 1
   refresh <- function(...){
     x = as.numeric(tclvalue(tkget(varEntry)))
     if(is.na(x)){
@@ -26,10 +26,10 @@ cltDemo <- function(){
            '2' = clt.exp(1,x),
            '3' = clt.chisq(1,x),
            '4' = clt.parab(1))
-    CDenv$n=1
+    CDenvir$n=1
   }
   nextStep <- function(...){
-    CDenv$n=CDenv$n+1
+    CDenvir$n=CDenvir$n+1
     x = as.numeric(tclvalue(tkget(varEntry)))
     if(is.na(x)){
       x = 1
@@ -49,10 +49,10 @@ cltDemo <- function(){
       tkinsert(varEntry,0,'1')
     }
     switch((tclvalue(runVar)),
-           '1' = clt.unif(CDenv$n),
-           '2' = clt.exp(CDenv$n,x),
-           '3' = clt.chisq(CDenv$n,x),
-           '4' = clt.parab(CDenv$n))    
+           '1' = clt.unif(CDenvir$n),
+           '2' = clt.exp(CDenvir$n,x),
+           '3' = clt.chisq(CDenvir$n,x),
+           '4' = clt.parab(CDenvir$n))    
   }
   clt.unif <- function(n=20) {
     N <- 10000

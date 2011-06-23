@@ -1,13 +1,13 @@
 minimAllocGUI <- function(factors=NULL,file=NULL,prob=1){
 
     getFile <- function(fileName){
-        MAenv <<- new.env()
+        MAenvir <<- new.env()
         input <- readLines(fileName)
         if(fileName!="tempFile.dat"){
             writeLines(input,"tempFile.dat")
             print("HERE")
         }
-        MAenv$prob = as.numeric(input[1])
+        MAenvir$prob = as.numeric(input[1])
         factors <- list()
         factors[1] <- strsplit(input[2],';')
         for(i in 3:(length(factors[1][[1]])+2)){
@@ -21,25 +21,25 @@ minimAllocGUI <- function(factors=NULL,file=NULL,prob=1){
         patMat = patMat[2:dim(patMat)[1],]
         rownames(patMat) = patMat[,1]
         patMat = patMat[,2:dim(patMat)[2]]
-        MAenv$factors = factors
-        MAenv$patMat = patMat
-        MAenv$fileName = fileName
+        MAenvir$factors = factors
+        MAenvir$patMat = patMat
+        MAenvir$fileName = fileName
     }
 
     putFile <- function(out){
-        write(MAenv$prob,file=out)
-        cat(c(MAenv$factors[1][[1]],'\n'),file=out,append=TRUE,sep=';')
-        for(i in 2:(length(MAenv$factors[1][[1]])+1)){
-            cat(MAenv$factors[i][[1]],file=out,append=TRUE,sep=';')
+        write(MAenvir$prob,file=out)
+        cat(c(MAenvir$factors[1][[1]],'\n'),file=out,append=TRUE,sep=';')
+        for(i in 2:(length(MAenvir$factors[1][[1]])+1)){
+            cat(MAenvir$factors[i][[1]],file=out,append=TRUE,sep=';')
             cat('\n',file=out,append=TRUE,sep=';')
         }
-        suppressWarnings(write.table(MAenv$patMat,file=out,append=TRUE,quote=FALSE,sep=';'))
+        suppressWarnings(write.table(MAenvir$patMat,file=out,append=TRUE,quote=FALSE,sep=';'))
     }
 
     plotResult <- function(...){
         # plotting the results
-        numLev = length(unlist(MAenv$factors[2:1000]))
-        numFact = length(MAenv$factors[1][[1]])
+        numLev = length(unlist(MAenvir$factors[2:1000]))
+        numFact = length(MAenvir$factors[1][[1]])
         
         xL = c(0,0.4,0.8,0.9)
         xR = (1:4)/4
@@ -56,18 +56,18 @@ minimAllocGUI <- function(factors=NULL,file=NULL,prob=1){
         #first column
         first = numFact+numLev+1
         for(i in 2:(numFact+1)){
-            lev = length(MAenv$factors[i][[1]])
+            lev = length(MAenvir$factors[i][[1]])
             first = first - lev
-            text(xL[1],mean(yB[first:(first+lev-1)]),MAenv$factors[1][[1]][i-1],pos=4,)
+            text(xL[1],mean(yB[first:(first+lev-1)]),MAenvir$factors[1][[1]][i-1],pos=4,)
             first = first - 1
         }
         #second, third and fourth column
         first = numFact+numLev
         for(i in 1:numFact){
-            lev = MAenv$factors[i+1][[1]]
+            lev = MAenvir$factors[i+1][[1]]
             for(j in 1:length(lev)){
-                patients = MAenv$patMat[MAenv$patMat[,i]==j,]
-                text(xL[2],yB[first],lev[j],pos=4,col=(j==MAenv$patMat[dim(MAenv$patMat)[1],i])+1)
+                patients = MAenvir$patMat[MAenvir$patMat[,i]==j,]
+                text(xL[2],yB[first],lev[j],pos=4,col=(j==MAenvir$patMat[dim(MAenvir$patMat)[1],i])+1)
                 if(is.matrix(patients)){
                     aCount = sum(patients[,numFact+1]=="A")
                     bCount = sum(patients[,numFact+1]=="B")
@@ -81,8 +81,8 @@ minimAllocGUI <- function(factors=NULL,file=NULL,prob=1){
                     bCount = 0
                 }
                      
-                text(xL[3],yB[first],aCount,pos=4,col=(MAenv$patMat[dim(MAenv$patMat)[1],"treatment"]=="A")*(j==MAenv$patMat[dim(MAenv$patMat)[1],i])+1)
-                text(xL[4],yB[first],bCount,pos=4,col=(MAenv$patMat[dim(MAenv$patMat)[1],"treatment"]=="B")*(j==MAenv$patMat[dim(MAenv$patMat)[1],i])+1)
+                text(xL[3],yB[first],aCount,pos=4,col=(MAenvir$patMat[dim(MAenvir$patMat)[1],"treatment"]=="A")*(j==MAenvir$patMat[dim(MAenvir$patMat)[1],i])+1)
+                text(xL[4],yB[first],bCount,pos=4,col=(MAenvir$patMat[dim(MAenvir$patMat)[1],"treatment"]=="B")*(j==MAenvir$patMat[dim(MAenvir$patMat)[1],i])+1)
                 first = first - 1
             }
             first = first - 1
@@ -90,60 +90,60 @@ minimAllocGUI <- function(factors=NULL,file=NULL,prob=1){
     }
     allocate <- function(...){
         add <- function(...){
-            if(!exists("patMat",env=MAenv)){
-                patMat = matrix(rep(0,length(MAenv$factors[1][[1]])+1),nrow=1)
-                colnames(patMat) <- c(MAenv$factors[1][[1]],"treatment")
-                assign("patMat",patMat,env=MAenv)
+            if(!exists("patMat",envir=MAenvir)){
+                patMat = matrix(rep(0,length(MAenvir$factors[1][[1]])+1),nrow=1)
+                colnames(patMat) <- c(MAenvir$factors[1][[1]],"treatment")
+                assign("patMat",patMat,envir=MAenvir)
             }
             # getting the appropriate input from the buttons
-            tempRow = rep(0,length(MAenv$factors[1][[1]]))
-            for(i in 1:(length(MAenv$factors[1][[1]]))){
-                tempRow[i] = as.numeric(tclvalue(get(paste("var",i,sep=""),env=MAenv)))
+            tempRow = rep(0,length(MAenvir$factors[1][[1]]))
+            for(i in 1:(length(MAenvir$factors[1][[1]]))){
+                tempRow[i] = as.numeric(tclvalue(get(paste("var",i,sep=""),envir=MAenvir)))
             }
             if(!any(tempRow==0)){
                 # setting the new treatment
                 aCount = 0
                 bCount = 0
-                numFact = length(MAenv$factors[1][[1]])
+                numFact = length(MAenvir$factors[1][[1]])
                 for(i in 1:numFact){
-                    treat = MAenv$patMat[MAenv$patMat[,i]==tempRow[i],numFact+1]
+                    treat = MAenvir$patMat[MAenvir$patMat[,i]==tempRow[i],numFact+1]
                     aCount = aCount + sum(treat=="A")
                     bCount = bCount + sum(treat=="B")
                 }
                 if(aCount > bCount) {
-                    tempRow[numFact+1] = LETTERS[rbinom(1,1,MAenv$prob)+1]
+                    tempRow[numFact+1] = LETTERS[rbinom(1,1,MAenvir$prob)+1]
                 }
                 else if(aCount < bCount){
-                    tempRow[numFact+1] = LETTERS[rbinom(1,1,1-MAenv$prob)+1]
+                    tempRow[numFact+1] = LETTERS[rbinom(1,1,1-MAenvir$prob)+1]
                 }
                 else{
                     tempRow[numFact+1] = LETTERS[rbinom(1,1,0.5)+1]
                 }
-                MAenv$patMat = rbind(MAenv$patMat,tempRow)
-                rownames(MAenv$patMat) <- 1:dim(MAenv$patMat)[1]
+                MAenvir$patMat = rbind(MAenvir$patMat,tempRow)
+                rownames(MAenvir$patMat) <- 1:dim(MAenvir$patMat)[1]
                 plotResult()
             }
         }
-        numFact = length(MAenv$factors[1][[1]])
+        numFact = length(MAenvir$factors[1][[1]])
         m <- tktoplevel()
         tkwm.title(m,"Minimum Allocation Technique")
         for(i in 1:numFact){
             tempFrame <- tkframe(m)
-            numLev <- length(MAenv$factors[i+1][[1]])
+            numLev <- length(MAenvir$factors[i+1][[1]])
             # gridding instead of packing now
-            # tkpack(tklabel(tempFrame,text=MAenv$factors[1][[1]][i]),side="left")
+            # tkpack(tklabel(tempFrame,text=MAenvir$factors[1][[1]][i]),side="left")
             tkgrid(tempFrame)
-            tkgrid(tklabel(tempFrame,text=MAenv$factors[1][[1]][i]),rowspan=numLev+1,sticky='e')
-            assign(paste("var",i,sep=""),tclVar(0),env=MAenv)           
+            tkgrid(tklabel(tempFrame,text=MAenvir$factors[1][[1]][i]),rowspan=numLev+1,sticky='e')
+            assign(paste("var",i,sep=""),tclVar(0),envir=MAenvir)           
             for(j in 1:numLev){
-                tempRadio <- tkradiobutton(tempFrame,text=MAenv$factors[i+1][[1]][j],variable=get(paste("var",i,sep=""),env=MAenv),value=j)
+                tempRadio <- tkradiobutton(tempFrame,text=MAenvir$factors[i+1][[1]][j],variable=get(paste("var",i,sep=""),envir=MAenvir),value=j)
                 tkgrid(tempRadio,row=j,column=2,sticky='w')
-                assign(paste("radio",i,".",j,sep=""),tempRadio,env=MAenv)
+                assign(paste("radio",i,".",j,sep=""),tempRadio,envir=MAenvir)
             }
         }
         addButton <- tkbutton(m,command=add,text="Apply Treatment")
         qFrame <- tkframe(m)
-        saveButton <- tkbutton(qFrame,command=function(...){putFile(MAenv$fileName);tkdestroy(m)},text="Save and Quit")
+        saveButton <- tkbutton(qFrame,command=function(...){putFile(MAenvir$fileName);tkdestroy(m)},text="Save and Quit")
         quitButton <- tkbutton(qFrame,command = function(...)tkdestroy(m),text="Quit without saving")
         tkgrid(addButton,columnspan=2)
         tkgrid(qFrame)
@@ -160,16 +160,16 @@ minimAllocGUI <- function(factors=NULL,file=NULL,prob=1){
         allocate()
     }
     else{
-       MAenv <<- new.env()
-       MAenv$factors <- list()
-       MAenv$prob <- prob
-       MAenv$fileName <- "tempFile.dat"
+       MAenvir <<- new.env()
+       MAenvir$factors <- list()
+       MAenvir$prob <- prob
+       MAenvir$fileName <- "tempFile.dat"
        if(is.null(factors)){
             refresh <- function(...){
                 fact = tclvalue(tkget(factorName))
-                MAenv$factors[1][[1]] = c(MAenv$factors[1][[1]],fact)
+                MAenvir$factors[1][[1]] = c(MAenvir$factors[1][[1]],fact)
                 levels = strsplit(tclvalue(tkget(factorDivides)),";")
-                MAenv$factors[length(MAenv$factors)+1] = levels
+                MAenvir$factors[length(MAenvir$factors)+1] = levels
                 tkinsert(factorList,"end",paste(fact,": ",levels,sep=""))
                 tkdelete(factorName,0,"end")
                 tkdelete(factorDivides,0,"end")
@@ -196,7 +196,7 @@ minimAllocGUI <- function(factors=NULL,file=NULL,prob=1){
             tkpack(buttonFrame,side="bottom")
         }
         else{
-            MAenv$factors <- factors
+            MAenvir$factors <- factors
             allocate()
         }
     }    

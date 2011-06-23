@@ -29,9 +29,5 @@
 \examples{
   #to call the dataset
   data("agpop")					#note the quotation marks
-
-  #to convert the -99's to NA's
-  library(gdata)
-  agpop2 = unknownToNA(agpop,unknown=-99)	#it is preferable to save new dataset under a new name
 }
 \keyword{datasets}

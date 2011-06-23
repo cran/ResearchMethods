@@ -1,37 +1,43 @@
-BlandAltman <- function(x,y,gui=TRUE,bandsOn=FALSE,biasOn=FALSE,regionOn=FALSE,smooth=FALSE,sig=2){
+BlandAltman <- function(x,y,gui=TRUE,bandsOn=TRUE,biasOn=FALSE,regionOn=FALSE,smooth=FALSE,sig=2,main=NULL){
+  if(is.null(main)){
+    maintit="Bland-Altman difference plot"
+  }
+  else{
+    maintit = main
+  }
+
   if(sum(is.na(x)+is.na(y))){
     n = length(x)
     out = (1:n)[(is.na(x)+is.na(y))!=0]
     x = x[-out]
     y = y[-out]
   }
-  BAenv <- new.env()
+  BAenvir <- new.env()
   bands = as.numeric(bandsOn)
   bias = as.numeric(biasOn)
   region = as.numeric(regionOn)
   biasVal = sig
-  assign("bands",tclVar(bands), env = BAenv)
-  assign("bias",tclVar(bias), env = BAenv)
-  assign ("region",tclVar(region), env = BAenv)
-  assign("biasVal",tclVar(biasVal), env = BAenv)
-  assign("smooth",tclVar(smooth), env = BAenv)
+  assign("bands",tclVar(bands), envir = BAenvir)
+  assign("bias",tclVar(bias), envir = BAenvir)
+  assign ("region",tclVar(region), envir = BAenvir)
+  assign("biasVal",tclVar(biasVal), envir = BAenvir)
+  assign("smooth",tclVar(smooth), envir = BAenvir)
 
   refresh<-function(...)
   {
     labx = "Mean"
     laby = "Difference"
-    maintit="Bland-Altman difference plot"
     alfactor = 1
     alxlimfactor = 1
-    rawBM = 1 - as.numeric(evalq(tclvalue(bands), env = BAenv))
-    shaded = as.numeric(evalq(tclvalue(region), env = BAenv))
-    shadeBias = as.numeric(evalq(tclvalue(bias), env = BAenv))
-    smooth = as.numeric(tclvalue(BAenv$smooth))
+    rawBM = 1 - as.numeric(evalq(tclvalue(bands), envir = BAenvir))
+    shaded = as.numeric(evalq(tclvalue(region), envir = BAenvir))
+    shadeBias = as.numeric(evalq(tclvalue(bias), envir = BAenvir))
+    smooth = as.numeric(tclvalue(BAenvir$smooth))
 
     if(gui & (shaded || shadeBias)){
       tkselect(bandsCheck)
     }
-    mult = as.numeric(evalq(tclvalue(biasVal), env = BAenv))
+    mult = as.numeric(evalq(tclvalue(biasVal), envir = BAenvir))
     # NEW SD
     difference <- -1*(x-y)						
     average<-(x+y)/2					
@@ -56,13 +62,16 @@ BlandAltman <- function(x,y,gui=TRUE,bandsOn=FALSE,biasOn=FALSE,regionOn=FALSE,s
     limx<-c(x.lower.boundary,x.upper.boundary)
     y.boundary<-max(abs(pretty(difference)))
     limy<-c(-y.boundary,y.boundary)
+    #Need to make sure that the region of agreement is inside the plot area
+    limy = range(limy,upper.agreement.limit+0.1*diff(range(difference)),lower.agreement.limit-0.1*diff(range(difference)))    
     if(diff(limx)<diff(limy)){
       limx = mean(average,na.rm=TRUE) + c(-0.5,0.5)*diff(limy)
     }
     else {
       limy = mean(difference,na.rm=TRUE) + c(-0.5,0.5)*diff(limx)
     }
-    
+
+
     # Plot
     par(pty="m")
     if (rawBM & !shaded & !shadeBias){
@@ -111,22 +120,21 @@ BlandAltman <- function(x,y,gui=TRUE,bandsOn=FALSE,biasOn=FALSE,regionOn=FALSE,s
   if(gui){
     m <- tktoplevel()
     tkwm.title(m, "Bland Altman Plot")
-    bandsCheck <- tkcheckbutton(m,variable=BAenv$bands, command = refresh, text="add confidence bounds?")
+    bandsCheck <- tkcheckbutton(m,variable=BAenvir$bands, command = refresh, text="add confidence bounds?")
     tkpack(bandsCheck)
-    biasCheck <- tkcheckbutton(m,variable=BAenv$bias, command = refresh, text="add bias line?")
+    biasCheck <- tkcheckbutton(m,variable=BAenvir$bias, command = refresh, text="add bias line?")
     tkpack(biasCheck)
-    regionCheck <- tkcheckbutton(m,variable=BAenv$region, command = refresh, text="add region of agreement?")
+    regionCheck <- tkcheckbutton(m,variable=BAenvir$region, command = refresh, text="add region of agreement?")
     tkpack(regionCheck)
-    smoothCheck <- tkcheckbutton(m,variable=BAenv$smooth, command = refresh, text="add a lines of best fit")
+    smoothCheck <- tkcheckbutton(m,variable=BAenvir$smooth, command = refresh, text="add a lines of best fit")
     tkpack(smoothCheck)
     frame <- tkframe(m)
     tkpack(frame,side="left")
     tkpack(tklabel(frame,text="sigma scaler"),side="left")
-    bandsScale <- tkscale(frame,command=refresh,from=0,to=3,orient="horiz",resolution=.1,showvalue=FALSE,length = 125,variable=BAenv$biasVal)
+    bandsScale <- tkscale(frame,command=refresh,from=0,to=3,orient="horiz",resolution=.1,showvalue=FALSE,length = 125,variable=BAenvir$biasVal)
     tkpack(bandsScale,side = "left")
   }
   else{
     refresh()
   }
 }
-  

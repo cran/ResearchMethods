@@ -1,24 +1,24 @@
 multHypothesis <- function(GUI=TRUE,alpha=0.05,hyp=1){
     # variable initiation
-    MHenv <<- new.env()
-    assign("alpha",tclVar(alpha),env=MHenv)
-    assign("cases",tclVar(hyp),env=MHenv)
+    MHenvir <<- new.env()
+    assign("alpha",tclVar(alpha),envir=MHenvir)
+    assign("cases",tclVar(hyp),envir=MHenvir)
     # subfunction
     getAlpha <- function(...){
-        if(GUI) a <- as.numeric(tclvalue(tkget(MHenv$alphaEntry)))
+        if(GUI) a <- as.numeric(tclvalue(tkget(MHenvir$alphaEntry)))
         else a <- 0.05
         if(!is.na(a) && a < 1 && a > 0)
             return(a)
         else{
-            tkdelete(MHenv$alphaEntry,0,"end")
-            tkinsert(MHenv$alphaEntry,0,"0.05")
+            tkdelete(MHenvir$alphaEntry,0,"end")
+            tkinsert(MHenvir$alphaEntry,0,"0.05")
             return(0.05)
         }
     }
     #refresh
     refresh <- function(...){
         a <- getAlpha()
-        k <- as.numeric(tclvalue(MHenv$cases))
+        k <- as.numeric(tclvalue(MHenvir$cases))
         ylim <- c(0,1)
         x <- 0:100
         y <- 1 - (1-a)^x
@@ -34,14 +34,14 @@ multHypothesis <- function(GUI=TRUE,alpha=0.05,hyp=1){
         tkwm.title(m,"Testing Multiple Hypotheses")
         caseFrame <- tkframe(m)
         alphaFrame <- tkframe(m)
-        caseSlider <- tkscale(caseFrame,command=refresh,from=0,to=100,orient='horiz',resolution=1,showvalue=TRUE,variable=MHenv$cases)
+        caseSlider <- tkscale(caseFrame,command=refresh,from=0,to=100,orient='horiz',resolution=1,showvalue=TRUE,variable=MHenvir$cases)
         alphaEntry <- tkentry(alphaFrame,width=5,bg='white')
         tkpack(tklabel(alphaFrame,text='alpha:'),side='left')
         tkpack(alphaFrame,alphaEntry,side='top')
         tkpack(tklabel(caseFrame,text='Number of Hypotheses:'),side='left')
         tkpack(caseFrame,caseSlider,side='top')
     
-        assign("alphaEntry",alphaEntry,env=MHenv)
+        assign("alphaEntry",alphaEntry,envir=MHenvir)
     }
     else refresh()
         

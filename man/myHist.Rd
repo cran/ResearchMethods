@@ -17,18 +17,7 @@
   \item{label.bars}{The bar labels.}
   \item{right}{Should the plot be right-justified?}
 }
-\details{
 
-}
-\value{
-
-}
-\note{
-
-}
 \author{ Mohamed Abdolell <mohamed.abdolell@dal.ca> and Sam Stewart <samstewart11@gmail.com> }
 \references{ This plot was designed for a course by Mohamed Abdolell }
-\examples{ 
-
-}
 \keyword{distribution}

@@ -23,6 +23,5 @@ sampleAssign(gui = T, n = 30, treat = 3, coinProb, type = 0, ...)
 \value{
   No value is returned, though the environment, SAenv, is left for the user to examine.
 }
-\references{  }
 \author{ Mohamed Abdolell <mohamed.abdolell@dal.ca> and Sam Stewart <samstewart11@gmail.com> }
 \keyword{design}
